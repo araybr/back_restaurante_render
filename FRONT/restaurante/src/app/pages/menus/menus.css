@@ -92,6 +92,34 @@ h2 {
   background-color: #e68a00;
 }
 
+.alergenos {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap; /* para que los iconos se muevan a la siguiente línea si hay muchos */
+  gap: 5px; /* espacio entre iconos */
+}
+
+/* Título "Alergenos:" */
+.alergenos strong {
+  margin-right: 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Iconos de alérgenos */
+.alergeno-icon {
+  width: 50px;      /* tamaño del icono */
+  height: 50px;     /* altura igual que el ancho */
+  object-fit: contain; /* asegura que la imagen no se deforme */
+  border-radius: 4px;  /* opcional, bordes ligeramente redondeados */
+  border: 1px solid #ddd; /* opcional, borde ligero para destacarlo */
+  background-color: #fff; /* opcional, fondo blanco */
+}
+
+
+
 /* Responsive */
 @media (max-width: 768px) {
   .producto-card img {

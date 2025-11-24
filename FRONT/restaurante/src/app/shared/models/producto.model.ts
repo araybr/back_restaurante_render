@@ -1,9 +1,12 @@
+import { Ingrediente } from "./ingrediente.model"
+
 export interface Menu {
   id: number;
   nombre: string;
   descripcion: string;
   precio: number;
   imagen_url?: string;
+  ingredientes?: Ingrediente[];
 }
 
 export interface Postre {
@@ -12,6 +15,7 @@ export interface Postre {
   descripcion: string;
   precio: number;
   imagen_url?: string;
+  ingredientes?: Ingrediente[];
 }
 
 export interface Bebida {
@@ -20,4 +24,5 @@ export interface Bebida {
   descripcion: string;
   precio: number;
   imagen_url?: string;
+  ingredientes?: Ingrediente[];
 }

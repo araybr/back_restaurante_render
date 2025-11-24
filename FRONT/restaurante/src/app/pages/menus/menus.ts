@@ -4,7 +4,6 @@ import { MenuService } from '../../core/services/menu';
 import { Pedido } from '../../core/services/pedido';
 import { AuthService } from '../../core/services/auth';
 import { Menu, Postre, Bebida } from '../../shared/models/producto.model';
-import {data} from 'jquery';
 
 @Component({
   selector: 'app-menus',
@@ -13,13 +12,29 @@ import {data} from 'jquery';
   templateUrl: './menus.html',
   styleUrls: ['./menus.css']
 })
-
 export class Menus implements OnInit {
   menus: Menu[] = [];
   postres: Postre[] = [];
   bebidas: Bebida[] = [];
   usuarioId: number | null = null;
   usuarioLogueado: any = null;
+
+  alergenoIcons: { [nombre: string]: string } = {
+    "Gluten": "assets/images/gluten.png",
+    "Crustáceos": "assets/images/crustaceos.png",
+    "Huevos": "assets/images/huevos.png",
+    "Pescado": "assets/images/pescado.png",
+    "Cacahuetes": "assets/images/cacahuetes.png",
+    "Soja": "assets/images/soja.png",
+    "Lácteos": "assets/images/lacteos.png",
+    "Frutos de cáscara": "assets/images/frutos-cascara.png",
+    "Apio": "assets/images/apio.png",
+    "Mostaza": "assets/images/mostaza.png",
+    "Sésamo": "assets/images/sesamo.png",
+    "Sulfitos": "assets/images/sulfitos.png",
+    "Altramuces": "assets/images/altramuces.png",
+    "Moluscos": "assets/images/moluscos.png"
+  };
 
   constructor(
     private menuService: MenuService,
@@ -43,7 +58,8 @@ export class Menus implements OnInit {
         nombre: menu.nombre,
         descripcion: menu.descripcion,
         precio: menu.precio,
-        imagen_url: menu.imagen_url
+        imagen_url: menu.imagen_url,
+        ingredientes: menu.ingredientes
       }));
     });
 
@@ -54,7 +70,8 @@ export class Menus implements OnInit {
         nombre: postre.nombre,
         descripcion: postre.descripcion,
         precio: postre.precio,
-        imagen_url: postre.imagen_url
+        imagen_url: postre.imagen_url,
+        ingredientes: postre.ingredientes
       }));
     });
 
@@ -65,7 +82,8 @@ export class Menus implements OnInit {
         nombre: bebida.nombre,
         descripcion: bebida.descripcion,
         precio: bebida.precio,
-        imagen_url: bebida.imagen_url
+        imagen_url: bebida.imagen_url,
+        ingredientes: bebida.ingredientes
       }));
     });
   }
@@ -73,14 +91,11 @@ export class Menus implements OnInit {
   agregarAlCarrito(tipo: 'menu' | 'postre' | 'bebida', producto: any) {
     if (!this.usuarioId) return alert('Debes iniciar sesión para añadir productos');
 
-    console.log('Producto que se va a agregar:', producto.id);
-
     this.pedidoService.agregarAlCarrito(producto.id, tipo).subscribe({
       next: () => alert(`${producto.nombre} añadido al carrito`),
       error: (err) => console.error(err)
     });
   }
-
 
   eliminarProducto(tipo: 'menu' | 'postre' | 'bebida', id: number) {
     if (!confirm('¿Seguro que quieres eliminar este producto?')) return;
@@ -92,5 +107,15 @@ export class Menus implements OnInit {
       },
       error: err => console.error('Error eliminando producto', err)
     });
+  }
+
+  getIconosAlergenos(producto: any): string[] {
+    if (!producto?.ingredientes) return [];
+
+    const alergenos = producto.ingredientes.flatMap(
+      (ing: any) => ing.alergenos?.map((a: any) => this.alergenoIcons[a.nombre] || "") || []
+    );
+
+    return [...new Set<string>(alergenos)].filter(icon => icon !== "");
   }
 }

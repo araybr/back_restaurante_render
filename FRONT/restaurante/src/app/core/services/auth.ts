@@ -40,4 +40,9 @@ export class AuthService {
     const data = localStorage.getItem('usuario');
     return data ? JSON.parse(data) : null;
   }
+
+  getAlergenosUsuario(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/alergenos`);
+  }
+
 }

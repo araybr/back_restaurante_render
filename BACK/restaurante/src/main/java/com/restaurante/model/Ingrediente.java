@@ -1,9 +1,11 @@
 package com.restaurante.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -39,5 +41,6 @@ public class Ingrediente {
             joinColumns = @JoinColumn(name = "id_ingrediente"),
             inverseJoinColumns = @JoinColumn(name = "id_alergeno")
     )
+    @JsonIgnore
     private Set<Alergeno> alergenos;
 }

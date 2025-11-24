@@ -14,6 +14,13 @@
       <li><strong>Fecha de registro:</strong> <span>{{ usuario.fechaRegistro | date: 'short' }}</span></li>
     </ul>
 
+    <div *ngIf="alergenosUsuario.length">
+      <h3>Alergias del usuario:</h3>
+      <ul>
+        <li *ngFor="let a of alergenosUsuario">{{ a.nombre }}</li>
+      </ul>
+    </div>
+
     <!-- 🔹 Carrito de compras -->
     <div class="carrito" *ngIf="carrito?.detalles?.length > 0; else vacio">
       <h3>Tu carrito</h3>

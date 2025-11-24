@@ -1,10 +1,12 @@
 <div class="productos-page">
+
+  <!-- ================= MENÚS ================= -->
   <h2>Menús</h2>
   <div class="productos-container">
     <div class="producto-card" *ngFor="let m of menus">
 
       <div class="img-container" *ngIf="m.imagen_url">
-        <img [src]="m.imagen_url" alt="{{m.nombre}}">
+        <img [src]="m.imagen_url" alt="{{ m.nombre }}">
         <button *ngIf="usuarioLogueado?.rol === 'admin'"
                 class="delete-overlay"
                 (click)="eliminarProducto('menu', m.id)">
@@ -14,17 +16,27 @@
 
       <h3>{{ m.nombre }}</h3>
       <p>{{ m.descripcion }}</p>
+
+      <!-- ⭐ ALÉRGENOS DEL MENÚ -->
+      <div class="alergenos" *ngIf="m.ingredientes?.length">
+        <img *ngFor="let icon of getIconosAlergenos(m)"
+             [src]="icon"
+             alt="Alergeno"
+             class="alergeno-icon">
+      </div>
+
       <p><strong>{{ m.precio | currency:'EUR' }}</strong></p>
       <button (click)="agregarAlCarrito('menu', m)">Añadir al carrito</button>
     </div>
   </div>
 
+  <!-- ================= POSTRES ================= -->
   <h2>Postres</h2>
   <div class="productos-container">
     <div class="producto-card" *ngFor="let p of postres">
 
       <div class="img-container" *ngIf="p.imagen_url">
-        <img [src]="p.imagen_url" alt="{{p.nombre}}">
+        <img [src]="p.imagen_url" alt="{{ p.nombre }}">
         <button *ngIf="usuarioLogueado?.rol === 'admin'"
                 class="delete-overlay"
                 (click)="eliminarProducto('postre', p.id)">
@@ -34,17 +46,27 @@
 
       <h3>{{ p.nombre }}</h3>
       <p>{{ p.descripcion }}</p>
+
+      <!-- ⭐ ALÉRGENOS DEL POSTRE -->
+      <div class="alergenos" *ngIf="p.ingredientes?.length">
+        <img *ngFor="let icon of getIconosAlergenos(p)"
+             [src]="icon"
+             alt="Alergeno"
+             class="alergeno-icon">
+      </div>
+
       <p><strong>{{ p.precio | currency:'EUR' }}</strong></p>
       <button (click)="agregarAlCarrito('postre', p)">Añadir al carrito</button>
     </div>
   </div>
 
+  <!-- ================= BEBIDAS ================= -->
   <h2>Bebidas</h2>
   <div class="productos-container">
     <div class="producto-card" *ngFor="let b of bebidas">
 
       <div class="img-container" *ngIf="b.imagen_url">
-        <img [src]="b.imagen_url" alt="{{b.nombre}}">
+        <img [src]="b.imagen_url" alt="{{ b.nombre }}">
         <button *ngIf="usuarioLogueado?.rol === 'admin'"
                 class="delete-overlay"
                 (click)="eliminarProducto('bebida', b.id)">
@@ -54,8 +76,18 @@
 
       <h3>{{ b.nombre }}</h3>
       <p>{{ b.descripcion }}</p>
+
+      <!-- ⭐ ALÉRGENOS DE LA BEBIDA -->
+      <div class="alergenos" *ngIf="b.ingredientes?.length">
+        <img *ngFor="let icon of getIconosAlergenos(b)"
+             [src]="icon"
+             alt="Alergeno"
+             class="alergeno-icon">
+      </div>
+
       <p><strong>{{ b.precio | currency:'EUR' }}</strong></p>
       <button (click)="agregarAlCarrito('bebida', b)">Añadir al carrito</button>
     </div>
   </div>
+
 </div>
