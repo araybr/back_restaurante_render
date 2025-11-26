@@ -1,5 +1,6 @@
 package com.restaurante.controller;
 
+import com.restaurante.model.Alergeno;
 import com.restaurante.model.Rol;
 import com.restaurante.model.Usuario;
 import com.restaurante.service.UsuarioService;
@@ -30,6 +31,29 @@ public class UsuarioController {
         return usuarioService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/alergenos")
+    public ResponseEntity<?> getAlergenosUsuario(@PathVariable Integer id) {
+        Optional<Usuario> usuarioOpt = usuarioService.findById(id);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Usuario usuario = usuarioOpt.get();
+
+        var alergenosLimpios = usuario.getAlergenos().stream()
+                .map(a -> {
+                    var alerg = new Alergeno();
+                    alerg.setId_alergeno(a.getId_alergeno());
+                    alerg.setNombre(a.getNombre());
+                    alerg.setDescripcion(a.getDescripcion());
+                    return alerg;
+                })
+                .toList();
+
+        return ResponseEntity.ok(alergenosLimpios);
     }
 
     @PostMapping("/login")
@@ -79,6 +103,23 @@ public class UsuarioController {
         return usuarioService.save(usuario);
     }
 
+    @PostMapping("/{id}/alergenos")
+    public ResponseEntity<?> agregarAlergenoUsuario(@PathVariable Integer id, @RequestBody String nombreAlergeno) {
+        Optional<Usuario> usuarioOpt = usuarioService.findById(id);
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Usuario usuario = usuarioOpt.get();
+
+        try {
+            usuarioService.agregarAlergeno(usuario, nombreAlergeno.replace("\"", ""));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> update(@PathVariable Integer id, @RequestBody Usuario usuario) {
         return usuarioService.findById(id)
@@ -100,4 +141,19 @@ public class UsuarioController {
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}/alergenos/{nombreAlergeno}")
+    public ResponseEntity<?> eliminarAlergenoUsuario(@PathVariable Integer id, @PathVariable String nombreAlergeno) {
+        Optional<Usuario> usuarioOpt = usuarioService.findById(id);
+        if (usuarioOpt.isEmpty()) return ResponseEntity.notFound().build();
+
+        Usuario usuario = usuarioOpt.get();
+        try {
+            usuarioService.eliminarAlergeno(usuario, nombreAlergeno);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }

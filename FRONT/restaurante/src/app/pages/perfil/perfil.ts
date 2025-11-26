@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth';
 import { Pedido } from '../../core/services/pedido';
 import { Usuario } from '../../shared/models/usuario.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css']
 })
@@ -16,6 +17,31 @@ export class Perfil implements OnInit {
   carrito: any = null;
   loading: boolean = false;
   alergenosUsuario: any[] = [];
+
+  nuevoAlergeno: string = "";
+
+  todosAlergenos: string[] = [
+    "Gluten", "Crustáceos", "Huevos", "Pescado", "Cacahuetes",
+    "Soja", "Lácteos", "Frutos de cáscara", "Apio", "Mostaza",
+    "Sésamo", "Sulfitos", "Altramuces", "Moluscos"
+  ];
+
+  alergenoIcons: { [nombre: string]: string } = {
+    "Gluten": "assets/images/gluten.png",
+    "Crustáceos": "assets/images/crustaceos.png",
+    "Huevos": "assets/images/huevos.png",
+    "Pescado": "assets/images/pescado.png",
+    "Cacahuetes": "assets/images/cacahuetes.png",
+    "Soja": "assets/images/soja.png",
+    "Lácteos": "assets/images/lacteos.png",
+    "Frutos de cáscara": "assets/images/frutos-cascara.png",
+    "Apio": "assets/images/apio.png",
+    "Mostaza": "assets/images/mostaza.png",
+    "Sésamo": "assets/images/sesamo.png",
+    "Sulfitos": "assets/images/sulfitos.png",
+    "Altramuces": "assets/images/altramuces.png",
+    "Moluscos": "assets/images/moluscos.png"
+  };
 
   constructor(private auth: AuthService, private pedidoService: Pedido) {}
 
@@ -29,10 +55,51 @@ export class Perfil implements OnInit {
 
   cargarAlergenos(): void {
     if (!this.usuario) return;
+
     this.auth.getAlergenosUsuario(this.usuario.id).subscribe({
-      next: (res) => this.alergenosUsuario = res,
+      next: (res) => {
+        this.alergenosUsuario = res;
+      },
       error: (err) => console.error('Error cargando alérgenos', err)
     });
+  }
+
+  agregarAlergeno(): void {
+    if (!this.usuario || !this.nuevoAlergeno) return;
+
+    // Comprobar si ya existe
+    if (this.alergenosUsuario.some(a => a.nombre === this.nuevoAlergeno)) {
+      return alert('Este alergeno ya está registrado.');
+    }
+
+    this.auth.agregarAlergenoUsuario(this.usuario.id, this.nuevoAlergeno).subscribe({
+      next: () => {
+        this.alergenosUsuario.push({ nombre: this.nuevoAlergeno });
+        this.nuevoAlergeno = "";
+        alert('Alergeno añadido correctamente.');
+      },
+      error: (err) => console.error('Error añadiendo alergeno', err)
+    });
+  }
+
+  eliminarAlergeno(alergeno: any): void {
+    if (!this.usuario) return;
+    if (!confirm(`¿Seguro que quieres eliminar la alergia ${alergeno.nombre}?`)) return;
+
+    this.auth.eliminarAlergenoUsuario(this.usuario.id, alergeno.nombre).subscribe({
+      next: () => {
+        this.alergenosUsuario = this.alergenosUsuario.filter(a => a.nombre !== alergeno.nombre);
+        alert('Alergeno eliminado.');
+      },
+      error: (err) => console.error('Error eliminando alergeno', err)
+    });
+  }
+
+
+  getIconosAlergenosUsuario(): string[] {
+    return this.alergenosUsuario
+      .map(a => this.alergenoIcons[a.nombre] || "")
+      .filter(icon => icon !== "");
   }
 
 
@@ -73,7 +140,7 @@ export class Perfil implements OnInit {
     });
   }
 
-  // 🔹 Cambiar cantidad de un producto
+
   cambiarCantidad(item: any, delta: number) {
     const nuevaCantidad = item.cantidad + delta;
     if (nuevaCantidad < 1) return;

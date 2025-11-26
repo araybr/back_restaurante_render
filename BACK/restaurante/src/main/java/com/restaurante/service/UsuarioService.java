@@ -1,6 +1,8 @@
 package com.restaurante.service;
 
+import com.restaurante.model.Alergeno;
 import com.restaurante.model.Usuario;
+import com.restaurante.repository.AlergenoRepository;
 import com.restaurante.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,11 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final AlergenoRepository alergenoRepo;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuarioService(UsuarioRepository usuarioRepo, AlergenoRepository alergenoRepo) {
+        this.usuarioRepository = usuarioRepo;
+        this.alergenoRepo = alergenoRepo;
     }
 
     public List<Usuario> getAllUsuarios() {
@@ -36,5 +40,23 @@ public class UsuarioService {
     public void deleteById(int id) {
         usuarioRepository.deleteById(id);
     }
+
+    public void agregarAlergeno(Usuario usuario, String nombreAlergeno) {
+        Alergeno alergeno = alergenoRepo.findByNombre(nombreAlergeno)
+                .orElseThrow(() -> new RuntimeException("Alergeno no encontrado: " + nombreAlergeno));
+
+        if (!usuario.getAlergenos().contains(alergeno)) {
+            usuario.getAlergenos().add(alergeno);
+            usuarioRepository.save(usuario);
+        }
+    }
+
+    public void eliminarAlergeno(Usuario usuario, String nombreAlergeno) {
+        Alergeno alergeno = alergenoRepo.findByNombre(nombreAlergeno)
+                .orElseThrow(() -> new RuntimeException("Alergeno no encontrado: " + nombreAlergeno));
+        usuario.getAlergenos().remove(alergeno);
+        usuarioRepository.save(usuario);
+    }
+
 }
 

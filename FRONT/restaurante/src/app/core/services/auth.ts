@@ -45,4 +45,16 @@ export class AuthService {
     return this.http.get<any>(`${this.apiUrl}/${id}/alergenos`);
   }
 
+  agregarAlergenoUsuario(idUsuario: number, alergeno: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.apiUrl}/${idUsuario}/alergenos`,
+      `"${alergeno}"`,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  eliminarAlergenoUsuario(idUsuario: number, alergeno: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${idUsuario}/alergenos/${alergeno}`);
+  }
+
 }

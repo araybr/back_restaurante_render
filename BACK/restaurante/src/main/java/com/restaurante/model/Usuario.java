@@ -51,7 +51,6 @@ public class Usuario {
             joinColumns = @JoinColumn(name = "id_usuario"),
             inverseJoinColumns = @JoinColumn(name = "id_alergeno")
     )
-    @JsonIgnore
     private Set<Alergeno> alergenos;
 }
 

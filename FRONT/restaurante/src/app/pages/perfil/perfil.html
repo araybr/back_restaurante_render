@@ -14,14 +14,30 @@
       <li><strong>Fecha de registro:</strong> <span>{{ usuario.fechaRegistro | date: 'short' }}</span></li>
     </ul>
 
-    <div *ngIf="alergenosUsuario.length">
+    <div class="alergenos-container">
       <h3>Alergias del usuario:</h3>
-      <ul>
-        <li *ngFor="let a of alergenosUsuario">{{ a.nombre }}</li>
-      </ul>
+
+      <div *ngIf="alergenosUsuario.length > 0" class="alergenos">
+        <div *ngFor="let a of alergenosUsuario" class="alergeno-item">
+          <img [src]="alergenoIcons[a.nombre]" alt="Alergeno" class="alergeno-icon">
+          <button class="eliminar-alergeno" (click)="eliminarAlergeno(a)">❌</button>
+        </div>
+      </div>
+
+      <div *ngIf="alergenosUsuario.length === 0">
+        <p>No hay alérgenos registrados.</p>
+      </div>
+
+      <div class="agregar-alergeno">
+        <select [(ngModel)]="nuevoAlergeno">
+          <option value="">Selecciona un alergeno</option>
+          <option *ngFor="let a of todosAlergenos" [value]="a">{{ a }}</option>
+        </select>
+        <button (click)="agregarAlergeno()">Añadir alergeno</button>
+      </div>
     </div>
 
-    <!-- 🔹 Carrito de compras -->
+    <!-- ================= Carrito de compras ================= -->
     <div class="carrito" *ngIf="carrito?.detalles?.length > 0; else vacio">
       <h3>Tu carrito</h3>
       <table>

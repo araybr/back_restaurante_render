@@ -18,6 +18,7 @@ export class Menus implements OnInit {
   bebidas: Bebida[] = [];
   usuarioId: number | null = null;
   usuarioLogueado: any = null;
+  alergenosUsuario: string[] = [];
 
   alergenoIcons: { [nombre: string]: string } = {
     "Gluten": "assets/images/gluten.png",
@@ -46,6 +47,15 @@ export class Menus implements OnInit {
     const usuario = this.auth.getUsuarioActual();
     this.usuarioId = usuario?.id ?? null;
     this.usuarioLogueado = usuario;
+
+    if (this.usuarioId) {
+      this.auth.getAlergenosUsuario(this.usuarioId).subscribe({
+        next: (res) => {
+          this.alergenosUsuario = res.map((a: any) => a.nombre);
+        },
+        error: (err) => console.error('Error cargando alérgenos', err)
+      });
+    }
 
     this.cargarProductos();
   }
@@ -90,6 +100,20 @@ export class Menus implements OnInit {
 
   agregarAlCarrito(tipo: 'menu' | 'postre' | 'bebida', producto: any) {
     if (!this.usuarioId) return alert('Debes iniciar sesión para añadir productos');
+
+    const alergenosProducto = producto.ingredientes?.flatMap(
+      (i: any) => i.alergenos?.map((a: any) => a.nombre) || []
+    ) || [];
+
+    const alergenosEnComun = this.alergenosUsuario.filter(a => alergenosProducto.includes(a));
+
+    if (alergenosEnComun.length > 0) {
+      const confirmacion = confirm(
+        `¡Atención! Este producto contiene los siguientes alérgenos que tienes registrados: ${alergenosEnComun.join(', ')}.\n` +
+        `¿Deseas añadirlo al carrito de todos modos?`
+      );
+      if (!confirmacion) return;
+    }
 
     this.pedidoService.agregarAlCarrito(producto.id, tipo).subscribe({
       next: () => alert(`${producto.nombre} añadido al carrito`),

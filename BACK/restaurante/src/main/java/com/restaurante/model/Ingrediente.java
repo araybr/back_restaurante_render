@@ -41,6 +41,5 @@ public class Ingrediente {
             joinColumns = @JoinColumn(name = "id_ingrediente"),
             inverseJoinColumns = @JoinColumn(name = "id_alergeno")
     )
-    @JsonIgnore
     private Set<Alergeno> alergenos;
 }
