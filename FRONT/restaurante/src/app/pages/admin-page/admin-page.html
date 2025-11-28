@@ -15,8 +15,34 @@
       <option value="postre">Postre</option>
     </select>
 
-    <button (click)="agregarProducto()">Añadir</button>
+    <h3>Ingredientes</h3>
+
+    <div class="ingredientes-selector">
+      <select [(ngModel)]="ingredienteSeleccionado">
+        <option value="">Seleccionar ingrediente...</option>
+        <option *ngFor="let ing of ingredientes" [ngValue]="ing">
+          {{ ing.nombre }}
+        </option>
+      </select>
+
+      <button (click)="agregarIngredienteProducto()">Añadir ingrediente</button>
+    </div>
+
+    <div class="ingredientes-list">
+      <p *ngIf="!nuevoProducto.ingredientes || nuevoProducto.ingredientes.length === 0">
+        No hay ingredientes añadidos.
+      </p>
+
+      <div class="ingrediente-item" *ngFor="let ing of nuevoProducto.ingredientes">
+        {{ ing.nombre }}
+        <span class="remove" (click)="quitarIngredienteProducto(ing)">❌</span>
+      </div>
+    </div>
+
+    <button class="crear-btn" (click)="agregarProducto()">Añadir Producto</button>
   </div>
+
+  <br><br><br><br>
 
   <h2>Gestión de Usuarios</h2>
 

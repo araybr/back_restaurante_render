@@ -45,6 +45,7 @@ public class MenuController {
                     existing.setImagen_url(menu.getImagen_url());
                     existing.setEspecialidad(menu.getEspecialidad());
                     existing.setMas_vendido(menu.getMas_vendido());
+                    existing.setIngredientes(menu.getIngredientes());
                     return ResponseEntity.ok(menuService.save(existing));
                 })
                 .orElse(ResponseEntity.notFound().build());

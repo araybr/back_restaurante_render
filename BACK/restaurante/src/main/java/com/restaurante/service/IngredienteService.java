@@ -3,8 +3,8 @@ package com.restaurante.service;
 import com.restaurante.model.Ingrediente;
 import com.restaurante.repository.IngredienteRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class IngredienteService {
@@ -19,15 +19,16 @@ public class IngredienteService {
         return ingredienteRepository.findAll();
     }
 
-    public Optional<Ingrediente> findById(Integer id) {
-        return ingredienteRepository.findById(id);
+    public Ingrediente findById(Integer id) {
+        return ingredienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ingrediente no encontrado"));
     }
 
-    public Ingrediente save(Ingrediente ingrediente) {
+    public Ingrediente create(Ingrediente ingrediente) {
         return ingredienteRepository.save(ingrediente);
     }
 
-    public void deleteById(Integer id) {
+    public void delete(Integer id) {
         ingredienteRepository.deleteById(id);
     }
 }
