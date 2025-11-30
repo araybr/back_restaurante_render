@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import {RouterLink} from '@angular/router';
 
 declare var $: any;
 declare var WOW: any;
@@ -7,12 +8,14 @@ declare var WOW: any;
   selector: 'app-home',
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
-  encapsulation: ViewEncapsulation.None // hace que los CSS sean globales
+  imports: [
+    RouterLink
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class Home implements AfterViewInit {
 
   ngAfterViewInit(): void {
-    // Cargamos scripts en orden
     this.loadScript('assets/js/modernizer.js')
       .then(() => this.loadScript('assets/js/bootstrap.min.js'))
       .then(() => this.loadScript('assets/js/custom.js'))
@@ -23,12 +26,11 @@ export class Home implements AfterViewInit {
   private loadAllJsAndInit(): void {
     this.loadScript('assets/js/all.js')
       .then(() => {
-        // Inicializamos WOW solo si existe
+
         if (typeof WOW !== 'undefined') {
           new WOW().init();
         }
 
-        // Inicializamos Owl Carousel solo si existe
         if ($('#owl-demo').length && typeof ($('#owl-demo') as any).owlCarousel === 'function') {
           ($('#owl-demo') as any).owlCarousel({
             autoPlay: 3000,
@@ -38,7 +40,6 @@ export class Home implements AfterViewInit {
           });
         }
 
-        // Inicializamos Slick Slider solo si existen los elementos
         if ($('.slider-single').length && $('.slider-nav').length
           && typeof ($('.slider-single') as any).slick === 'function') {
 

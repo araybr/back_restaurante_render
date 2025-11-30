@@ -16,7 +16,6 @@
   border-radius: 12px;
 }
 
-
 .admin-container h1 {
   text-align: center;
   color: #ff7f50;
@@ -211,7 +210,6 @@
   transform: scale(1.2);
 }
 
-/* Selector de rol */
 .usuarios-container select {
   padding: 5px;
   background: #1a1a1a;

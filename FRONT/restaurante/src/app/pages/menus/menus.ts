@@ -61,7 +61,6 @@ export class Menus implements OnInit {
   }
 
   cargarProductos() {
-    // Menús
     this.menuService.getMenus().subscribe((menusFromBackend: any[]) => {
       this.menus = menusFromBackend.map(menu => ({
         id: menu.id_menu,
@@ -73,7 +72,6 @@ export class Menus implements OnInit {
       }));
     });
 
-    // Postres
     this.menuService.getPostres().subscribe((postresFromBackend: any[]) => {
       this.postres = postresFromBackend.map(postre => ({
         id: postre.id_postre,
@@ -85,7 +83,6 @@ export class Menus implements OnInit {
       }));
     });
 
-    // Bebidas
     this.menuService.getBebidas().subscribe((bebidasFromBackend: any[]) => {
       this.bebidas = bebidasFromBackend.map(bebida => ({
         id: bebida.id_bebida,
