@@ -13,8 +13,8 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("https://cerulean-malasada-07a2af.netlify.app")
+                registry.addMapping("/api/**")
+                        .allowedOrigins("https://cerulean-malasada-07a2af.netlify.app/")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
